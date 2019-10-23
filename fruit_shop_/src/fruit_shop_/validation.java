@@ -41,7 +41,7 @@ public class validation {
                 if (num >= min && num <= max) {
                     break;
                 } else {
-                    System.err.println("type mismatch");
+                    System.out.println("Please enter from" + min +"to" + max);
                     continue;
                 }
             }
@@ -58,9 +58,11 @@ public class validation {
             input = in.nextLine().trim();
             try {
                 num = Double.parseDouble(input);
-                break;
+                if (num >= min && num <= max) {
+                     break;
+                }
             } catch (Exception e) {
-                System.err.println("type mismatch");
+                    System.out.println("Please enter from" + min +"to" + max);
                 continue;
             }
         } while (true);

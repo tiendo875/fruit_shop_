@@ -5,8 +5,12 @@
  */
 package fruit_shop_;
 
+import java.awt.ItemSelectable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -30,7 +34,7 @@ public class Manager {
             String fruitId = validation.check_input_string("Enter fruit id: ");
             //check id exist
             if (!validation.checkIdExist(lf, fruitId)) {
-                System.err.println("Id exist");
+                System.out.println("Id exist");
                 return;
             }
             String fruitName = validation.check_input_string("Enter fruit name: ");
@@ -48,7 +52,8 @@ public class Manager {
     //2.show orders
     public void viewOrder(Hashtable<String, ArrayList<Order>> ht) {
         for (String name : ht.keySet()) {
-            System.out.println("Customer: " + name);
+
+            System.out.println("Customer: " + name.replaceAll("\\@+", ""));
             ArrayList<Order> lo = ht.get(name);
             displayListOrder(lo);
         }
@@ -69,7 +74,7 @@ public class Manager {
     //3.shopping
     public void shopping(ArrayList<Fruit> lf, Hashtable<String, ArrayList<Order>> ht) {
         if (lf.isEmpty()) {
-            System.err.println("No have item.");
+            System.out.println("No have item.");
             return;
         }
         ArrayList<Order> lo = new ArrayList<>();
@@ -93,12 +98,36 @@ public class Manager {
         }
         displayListOrder(lo);
         String name = validation.check_input_string("Enter name: ");
-        ArrayList<Order> al = ht.put(name.toLowerCase(), lo);
-        if (al != null) {
-            lo.addAll(al);
-            ht.put(name.toLowerCase(), lo);
+        name = otherName(name, ht);
+        ht.put(name.toUpperCase(), lo);
+        System.out.println("Add successfull");
+    }
+
+    // check name duplication 
+    public String otherName(String name, Hashtable<String, ArrayList<Order>> ht) {
+        
+        // phải chuyển từ keyset sang list để sort vì keyset không sắp xếp theo thứ tự
+        //nên mỗi lần thêm 1 ký tự vào tên thì nó có thể lặp lại với ký tự đã duyệt qua từ trước nên có thể bị sai
+        //=> phải sort trước
+        List<String> sort = ht.keySet().stream().collect(Collectors.toList());
+        Collections.sort(sort, (o1, o2) -> {
+            return o1.compareTo(o2); //To change body of generated lambdas, choose Tools | Templates.
+        });
+        
+        
+        // nếu gặp phần tử trùng thì tự động thêm vào cuối 1 ký tự @
+        //trong trường hợp có List đã có 2 phần thử name và name@
+        // vì List(sort) đã được sort sẵn nên name sẽ đứng trước name@
+        //vậy nên khi ta truyền phần tử name vào để so sánh thì khi gặp name trong list sẽ tự động thêm @ và trở thành name@
+        //phần tử name@ chắc chắn lại gặp phần tử name@ trong List
+        //lúc này name@ sẽ trở thành name@@
+        // và cứ như thế chạy hết vòng for và truyền name@@@@.... ra ngoài
+        for (String name1 : sort) {
+            if (name.equalsIgnoreCase(name1)) {
+                name = name + "@";
+            }
         }
-        System.err.println("Add successfull");
+        return name;
     }
 
     //display list fruit in shop

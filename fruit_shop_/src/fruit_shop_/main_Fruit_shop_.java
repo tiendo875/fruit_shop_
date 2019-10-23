@@ -20,6 +20,10 @@ public class main_Fruit_shop_ {
     public static void main(String[] args) {
         Manager Mg = new Manager();
         ArrayList<Fruit> lf = new ArrayList<>();
+        lf.add(new Fruit("1", "apple", 5, 110, "USA"));
+        lf.add(new Fruit("2", "banana", 2, 10, "Viet Nam"));
+        lf.add(new Fruit("3", "strawberry", 1, 195423, "Da Lat"));
+        lf.add(new Fruit("4", "blue berry", 1, 110000, "Italia"));
         Hashtable<String, ArrayList<Order>> ht = new Hashtable<>();
         do {
             int choice = Mg.menu();
