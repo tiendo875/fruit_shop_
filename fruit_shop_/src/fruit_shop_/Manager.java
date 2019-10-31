@@ -53,7 +53,7 @@ public class Manager {
     public void viewOrder(Hashtable<String, ArrayList<Order>> ht) {
         for (String name : ht.keySet()) {
 
-            System.out.println("Customer: " + name.replaceAll("\\@+", ""));
+            System.out.println("Customer: " + name.split("@")[0]);
             ArrayList<Order> lo = ht.get(name);
             displayListOrder(lo);
         }
@@ -99,13 +99,13 @@ public class Manager {
         displayListOrder(lo);
         String name = validation.check_input_string("Enter name: ");
         name = otherName(name, ht);
-        ht.put(name.toUpperCase(), lo);
+        ht.put(name + "@" + ht.size(), lo);
         System.out.println("Add successfull");
     }
 
     // check name duplication 
     public String otherName(String name, Hashtable<String, ArrayList<Order>> ht) {
-        
+
         // phải chuyển từ keyset sang list để sort vì keyset không sắp xếp theo thứ tự
         //nên mỗi lần thêm 1 ký tự vào tên thì nó có thể lặp lại với ký tự đã duyệt qua từ trước nên có thể bị sai
         //=> phải sort trước
@@ -113,8 +113,7 @@ public class Manager {
         Collections.sort(sort, (o1, o2) -> {
             return o1.compareTo(o2); //To change body of generated lambdas, choose Tools | Templates.
         });
-        
-        
+
         // nếu gặp phần tử trùng thì tự động thêm vào cuối 1 ký tự @
         //trong trường hợp có List đã có 2 phần thử name và name@
         // vì List(sort) đã được sort sẵn nên name sẽ đứng trước name@
